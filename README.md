@@ -1,7 +1,7 @@
 # React Native API Tracker ⚡
 
 [![npm version](https://img.shields.io/npm/v/@conversantech/react-native-api-tracker.svg)](https://www.npmjs.com/package/@conversantech/react-native-api-tracker)
-[![license](https://img.shields.io/npm/l/@conversantech/react-native-api-tracker.svg)](https://github.com/conversantech/react-native-api-tracker/blob/main/LICENSE)
+[![license](https://img.shields.io/npm/l/@conversantech/react-native-api-tracker.svg)](https://github.com/conversantech/react-native-api-logger/blob/main/LICENSE)
 
 A professional, **zero-boilerplate** network debugger for React Native. It automatically intercepts all outgoing network traffic (XMLHttpRequest/Fetch) and provides a beautiful, dashboard-style UI for inspection and reporting.
 

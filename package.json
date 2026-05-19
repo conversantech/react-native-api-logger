@@ -1,6 +1,6 @@
 {
   "name": "@conversantech/react-native-api-tracker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A React Native API logger",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
