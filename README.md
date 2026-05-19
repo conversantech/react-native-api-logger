@@ -1,4 +1,7 @@
-# React Native API Logger ⚡
+# React Native API Tracker ⚡
+
+[![npm version](https://img.shields.io/npm/v/@conversantech/react-native-api-tracker.svg)](https://www.npmjs.com/package/@conversantech/react-native-api-tracker)
+[![license](https://img.shields.io/npm/l/@conversantech/react-native-api-tracker.svg)](https://github.com/conversantech/react-native-api-tracker/blob/main/LICENSE)
 
 A professional, **zero-boilerplate** network debugger for React Native. It automatically intercepts all outgoing network traffic (XMLHttpRequest/Fetch) and provides a beautiful, dashboard-style UI for inspection and reporting.
 
@@ -19,9 +22,9 @@ A professional, **zero-boilerplate** network debugger for React Native. It autom
 ## 📦 Installation
 
 ```bash
-npm install react-native-api-logger
+npm install @conversantech/react-native-api-tracker
 # or
-yarn add react-native-api-logger
+yarn add @conversantech/react-native-api-tracker
 ```
 
 ### Dependencies
@@ -39,7 +42,7 @@ This package requires the following peer dependencies:
 Call `ApiLogger.initialize()` at the entry point of your app (usually `index.js` or `App.tsx`).
 
 ```tsx
-import { ApiLogger } from 'react-native-api-logger';
+import { ApiLogger } from '@conversantech/react-native-api-tracker';
 
 ApiLogger.initialize({
   enabled: true, // Default: true
@@ -52,7 +55,7 @@ ApiLogger.initialize({
 Place `ApiLoggerRoot` at the very top of your component tree.
 
 ```tsx
-import { ApiLoggerRoot } from 'react-native-api-logger';
+import { ApiLoggerRoot } from '@conversantech/react-native-api-tracker';
 
 export default function App() {
   return (
@@ -72,7 +75,7 @@ export default function App() {
 Control the logger from your own custom buttons or settings screens.
 
 ```tsx
-import { ApiLogger } from 'react-native-api-logger';
+import { ApiLogger } from '@conversantech/react-native-api-tracker';
 
 // Enable/Disable (Persists state automatically)
 await ApiLogger.enable();
@@ -125,7 +128,6 @@ ApiLogger.initialize({
     port: 587,
     username: 'your-email@gmail.com',
     password: 'app-password',
-    fromEmail: 'reports@company.com',
     defaultRecipients: [
       { name: 'Dev Team', email: 'dev@example.com' }
     ],
@@ -140,7 +142,7 @@ ApiLogger.initialize({
 To automatically log which screen triggered an API call, use the `ApiLoggerScreenTracker` inside your `NavigationContainer`.
 
 ```tsx
-import { ApiLoggerScreenTracker } from 'react-native-api-logger';
+import { ApiLoggerScreenTracker } from '@conversantech/react-native-api-tracker';
 
 <NavigationContainer>
   <ApiLoggerScreenTracker />
@@ -150,5 +152,11 @@ import { ApiLoggerScreenTracker } from 'react-native-api-logger';
 
 ---
 
-## 📄 License
-MIT
+## Created & Maintained By
+
+This package is created and maintained by [Conversantech](https://conversantech.com).
+
+## License
+
+This project is licensed under the BSD-3-Clause License - see the [LICENSE](LICENSE) file for details.
+Copyright (c) 2026 Conversantech.

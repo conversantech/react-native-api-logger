@@ -38,8 +38,10 @@ export class ApiNavigatorObserver {
 export const ApiLoggerScreenTracker = () => {
   try {
     const { useNavigation } = require('@react-navigation/native');
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const navigation = useNavigation();
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       const updateScreenName = () => {
         try {
@@ -61,7 +63,9 @@ export const ApiLoggerScreenTracker = () => {
       return unsubscribe;
     }, [navigation]);
   } catch (e) {
-    console.warn('[ApiLogger] @react-navigation/native not found. Screen tracking disabled.');
+    console.warn(
+      '[ApiLogger] @react-navigation/native not found. Screen tracking disabled.'
+    );
   }
 
   return null;

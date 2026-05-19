@@ -14,7 +14,8 @@ export function initializeNetworkInterceptor() {
     (this as any).__apiLoggerUrl = url;
     (this as any).__apiLoggerRequestHeaders = {};
     (this as any).__apiLoggerStartTime = Date.now();
-    (this as any).__apiLoggerScreenName = ApiLoggerService.getCurrentScreenName();
+    (this as any).__apiLoggerScreenName =
+      ApiLoggerService.getCurrentScreenName();
     // @ts-ignore
     return originalOpen.apply(this, arguments);
   };
@@ -51,7 +52,10 @@ export function initializeNetworkInterceptor() {
           } catch (e) {
             responseBody = text;
           }
-        } else if (typeof this.response === 'object' && this.response !== null) {
+        } else if (
+          typeof this.response === 'object' &&
+          this.response !== null
+        ) {
           // Handle cases where response is already an object (e.g. responseType = 'json')
           // Clone it to avoid reference issues
           try {
@@ -68,19 +72,21 @@ export function initializeNetworkInterceptor() {
 
       // Handle React Native Blob responses
       if (
-        responseBody && 
-        typeof responseBody === 'object' && 
-        ((responseBody._data && responseBody.blobId) || (this.response instanceof Blob))
+        responseBody &&
+        typeof responseBody === 'object' &&
+        ((responseBody._data && responseBody.blobId) ||
+          this.response instanceof Blob)
       ) {
         try {
-          const blob = this.response instanceof Blob ? this.response : responseBody;
+          const blob =
+            this.response instanceof Blob ? this.response : responseBody;
           const reader = new FileReader();
           const textBody = await new Promise((resolve, reject) => {
             reader.onloadend = () => resolve(reader.result);
             reader.onerror = reject;
             reader.readAsText(blob);
           });
-          
+
           try {
             responseBody = JSON.parse(textBody as string);
           } catch (e) {

@@ -76,6 +76,11 @@ export const ApiLoggerRoot: React.FC = () => {
 /**
  * Screen tracker component to be placed inside NavigationContainer
  */
-export { ApiLoggerScreenTracker, ApiLoggerWrapper, ApiLoggerToggle, ApiLoggerButton };
+export {
+  ApiLoggerScreenTracker,
+  ApiLoggerWrapper,
+  ApiLoggerToggle,
+  ApiLoggerButton,
+};
 
 export * from './models';

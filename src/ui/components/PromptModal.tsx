@@ -46,7 +46,7 @@ export const PromptModal: React.FC<Props> = ({
     >
       <TouchableWithoutFeedback onPress={onCancel}>
         <View style={styles.overlay}>
-          <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
+          <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               style={styles.container}
@@ -65,7 +65,12 @@ export const PromptModal: React.FC<Props> = ({
                 />
                 <View style={styles.actions}>
                   <TouchableOpacity style={styles.button} onPress={onCancel}>
-                    <Text style={[styles.buttonText, { color: Theme.colors.textSecondary }]}>
+                    <Text
+                      style={[
+                        styles.buttonText,
+                        { color: Theme.colors.textSecondary },
+                      ]}
+                    >
                       Cancel
                     </Text>
                   </TouchableOpacity>
@@ -73,7 +78,12 @@ export const PromptModal: React.FC<Props> = ({
                     style={[styles.button, styles.saveButton]}
                     onPress={() => onSave(value)}
                   >
-                    <Text style={[styles.buttonText, { color: Theme.colors.primary }]}>
+                    <Text
+                      style={[
+                        styles.buttonText,
+                        { color: Theme.colors.primary },
+                      ]}
+                    >
                       Save
                     </Text>
                   </TouchableOpacity>

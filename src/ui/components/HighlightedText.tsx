@@ -8,14 +8,18 @@ interface Props {
   numberOfLines?: number;
 }
 
-export const HighlightedText: React.FC<Props> = ({ 
-  text, 
-  highlight, 
-  style, 
-  numberOfLines 
+export const HighlightedText: React.FC<Props> = ({
+  text,
+  highlight,
+  style,
+  numberOfLines,
 }) => {
   if (!highlight.trim()) {
-    return <Text style={style} numberOfLines={numberOfLines}>{text}</Text>;
+    return (
+      <Text style={style} numberOfLines={numberOfLines}>
+        {text}
+      </Text>
+    );
   }
 
   const parts = text.split(new RegExp(`(${highlight})`, 'gi'));

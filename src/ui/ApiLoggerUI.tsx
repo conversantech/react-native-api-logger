@@ -13,14 +13,17 @@ interface Props {
 }
 
 export const ApiLoggerUI: React.FC<Props> = ({ visible, onClose }) => {
-  const [selectedSession, setSelectedSession] = React.useState<ApiSession | null>(null);
+  const [selectedSession, setSelectedSession] =
+    React.useState<ApiSession | null>(null);
   const [selectedLog, setSelectedLog] = React.useState<ApiLog | null>(null);
 
   React.useEffect(() => {
     const unsubscribe = ApiLoggerService.subscribe(() => {
       if (selectedSession) {
         // Refresh selected session data from the service
-        const updated = ApiLoggerService.getSessions().find(s => s.id === selectedSession.id);
+        const updated = ApiLoggerService.getSessions().find(
+          (s) => s.id === selectedSession.id
+        );
         if (updated) {
           setSelectedSession({ ...updated });
         }
@@ -44,10 +47,7 @@ export const ApiLoggerUI: React.FC<Props> = ({ visible, onClose }) => {
   const renderContent = () => {
     if (selectedLog) {
       return (
-        <LogDetail
-          log={selectedLog}
-          onBack={() => setSelectedLog(null)}
-        />
+        <LogDetail log={selectedLog} onBack={() => setSelectedLog(null)} />
       );
     }
 
@@ -62,10 +62,7 @@ export const ApiLoggerUI: React.FC<Props> = ({ visible, onClose }) => {
     }
 
     return (
-      <SessionList
-        onSelectSession={setSelectedSession}
-        onBack={onClose}
-      />
+      <SessionList onSelectSession={setSelectedSession} onBack={onClose} />
     );
   };
 
@@ -77,9 +74,7 @@ export const ApiLoggerUI: React.FC<Props> = ({ visible, onClose }) => {
       onRequestClose={handleBack}
     >
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={styles.container}>
-        {renderContent()}
-      </SafeAreaView>
+      <SafeAreaView style={styles.container}>{renderContent()}</SafeAreaView>
     </Modal>
   );
 };

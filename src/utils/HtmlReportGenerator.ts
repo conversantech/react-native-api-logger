@@ -1,10 +1,18 @@
 import type { ApiLog, ApiSession } from '../models';
 
-export const generateHtmlReport = (session: ApiSession, senderName?: string): string => {
+export const generateHtmlReport = (
+  session: ApiSession,
+  senderName?: string
+): string => {
   const totalRequests = session.logs.length;
-  const successRequests = session.logs.filter((log: ApiLog) => !log.isError).length;
+  const successRequests = session.logs.filter(
+    (log: ApiLog) => !log.isError
+  ).length;
   const failureRequests = totalRequests - successRequests;
-  const successRate = totalRequests > 0 ? ((successRequests / totalRequests) * 100).toFixed(1) : '0.0';
+  const successRate =
+    totalRequests > 0
+      ? ((successRequests / totalRequests) * 100).toFixed(1)
+      : '0.0';
 
   return `
 <!DOCTYPE html>
@@ -69,11 +77,15 @@ export const generateHtmlReport = (session: ApiSession, senderName?: string): st
 
       <div class="info-section">
         <table class="info-table">
-          ${senderName ? `
+          ${
+            senderName
+              ? `
           <tr>
             <td class="info-label">Sent By</td>
             <td class="info-value">${senderName}</td>
-          </tr>` : ''}
+          </tr>`
+              : ''
+          }
           <tr>
             <td class="info-label">Started At</td>
             <td class="info-value">${new Date(session.startTime).toLocaleString()}</td>

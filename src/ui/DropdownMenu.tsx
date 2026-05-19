@@ -24,7 +24,12 @@ interface Props {
   anchor: { x: number; y: number };
 }
 
-export const DropdownMenu: React.FC<Props> = ({ visible, onClose, items, anchor }) => {
+export const DropdownMenu: React.FC<Props> = ({
+  visible,
+  onClose,
+  items,
+  anchor,
+}) => {
   return (
     <Modal
       visible={visible}
@@ -34,30 +39,33 @@ export const DropdownMenu: React.FC<Props> = ({ visible, onClose, items, anchor 
     >
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>
-          <View 
+          <View
             style={[
-              styles.menu, 
-              { top: anchor.y, right: Dimensions.get('window').width - anchor.x }
+              styles.menu,
+              {
+                top: anchor.y,
+                right: Dimensions.get('window').width - anchor.x,
+              },
             ]}
           >
             {items.map((item, index) => (
               <TouchableOpacity
                 key={index}
-                style={[
-                  styles.item,
-                  index < items.length - 1 && styles.border
-                ]}
+                style={[styles.item, index < items.length - 1 && styles.border]}
                 onPress={() => {
                   onClose();
                   item.onPress();
                 }}
               >
                 {item.icon && (
-                  <View style={styles.iconContainer}>
-                    {item.icon}
-                  </View>
+                  <View style={styles.iconContainer}>{item.icon}</View>
                 )}
-                <Text style={[styles.label, item.isDestructive && styles.destructiveText]}>
+                <Text
+                  style={[
+                    styles.label,
+                    item.isDestructive && styles.destructiveText,
+                  ]}
+                >
                   {item.label}
                 </Text>
               </TouchableOpacity>

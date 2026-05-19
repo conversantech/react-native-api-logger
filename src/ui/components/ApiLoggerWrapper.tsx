@@ -31,14 +31,14 @@ export const ApiLoggerWrapper: React.FC<Props> = ({
     }
 
     const nextTaps = taps + 1;
-    
+
     if (nextTaps >= tapCount) {
       // Trigger reached!
       setTaps(0);
       ApiLogger.open();
     } else {
       setTaps(nextTaps);
-      
+
       // Start/Restart the timeout
       timerRef.current = setTimeout(() => {
         setTaps(0);
@@ -48,9 +48,7 @@ export const ApiLoggerWrapper: React.FC<Props> = ({
 
   return (
     <TouchableWithoutFeedback onPress={handleTap}>
-      <View style={styles.container}>
-        {children}
-      </View>
+      <View style={styles.container}>{children}</View>
     </TouchableWithoutFeedback>
   );
 };

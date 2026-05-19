@@ -22,7 +22,10 @@ export const SessionList: React.FC<Props> = ({ onSelectSession, onBack }) => {
     ApiLoggerService.getSessions()
   );
   const [clearAllVisible, setClearAllVisible] = React.useState(false);
-  const [deleteSessionData, setDeleteSessionData] = React.useState<{ id: string, name: string } | null>(null);
+  const [deleteSessionData, setDeleteSessionData] = React.useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   React.useEffect(() => {
     const unsubscribe = ApiLoggerService.subscribe(() => {
@@ -97,9 +100,7 @@ export const SessionList: React.FC<Props> = ({ onSelectSession, onBack }) => {
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         contentContainerStyle={styles.listContent}
-        ListEmptyComponent={
-          <Text style={styles.empty}>No sessions found</Text>
-        }
+        ListEmptyComponent={<Text style={styles.empty}>No sessions found</Text>}
       />
 
       <ConfirmationModal

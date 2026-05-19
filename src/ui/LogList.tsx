@@ -24,7 +24,8 @@ import {
   TimeIcon,
   PhoneIcon,
   EditIcon,
-  DeleteIcon
+  DeleteIcon,
+  CloseIcon,
 } from './Icons';
 import { HighlightedText } from './components/HighlightedText';
 import { PromptModal } from './components/PromptModal';
@@ -41,6 +42,9 @@ interface Props {
 export const LogList: React.FC<Props> = ({ session, onBack, onSelectLog }) => {
   const [search, setSearch] = React.useState('');
   const [showSearch, setShowSearch] = React.useState(false);
+  const [filterType, setFilterType] = React.useState<
+    'ALL' | 'SUCCESS' | 'ERROR'
+  >('ALL');
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [menuAnchor, setMenuAnchor] = React.useState({ x: 0, y: 0 });
   const [renameModalVisible, setRenameModalVisible] = React.useState(false);
@@ -181,7 +185,9 @@ ${senderName ? `Sender: ${senderName}\n` : ''}Logs Count: ${session.logs.length}
         Alert.alert('Success', 'Email report sent successfully.');
       } catch (e: any) {
         console.error('SMTP Send Error:', e);
-        throw new Error(`Failed to send via SMTP: ${e.message}. Ensure react-native-smtp-mailer is installed.`);
+        throw new Error(
+          `Failed to send via SMTP: ${e.message}. Ensure react-native-smtp-mailer is installed.`
+        );
       }
     } else {
       // Fallback to regular Share with email filter
@@ -222,7 +228,10 @@ ${senderName ? `Sender: ${senderName}\n` : ''}Logs Count: ${session.logs.length}
         await RNFS.writeFile(downloadPath, fullContent, 'utf8');
         console.log('Debug: File saved to Downloads:', downloadPath);
       } catch (downloadErr) {
-        console.warn('Debug: Could not save to Downloads (likely permission issue):', downloadErr);
+        console.warn(
+          'Debug: Could not save to Downloads (likely permission issue):',
+          downloadErr
+        );
       }
     }
 
@@ -243,26 +252,34 @@ ${senderName ? `Sender: ${senderName}\n` : ''}Logs Count: ${session.logs.length}
   };
 
   const renderItem = ({ item }: { item: ApiLog }) => {
-    const statusColor = item.isError ? Theme.colors.error : Theme.colors.success;
+    const statusColor = getIsError(item)
+      ? Theme.colors.error
+      : Theme.colors.success;
     const methodColor = getMethodColor(item.method);
     const dateObj = new Date(item.timestamp);
 
     const formattedDate = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
-    const formattedTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    const formattedTime = dateObj.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    });
 
     return (
-      <TouchableOpacity
-        style={styles.item}
-        onPress={() => onSelectLog(item)}
-      >
+      <TouchableOpacity style={styles.item} onPress={() => onSelectLog(item)}>
         <View style={styles.itemMain}>
           <View style={styles.itemTopRow}>
             <View style={styles.badgeRow}>
               <View style={[styles.methodBadge, { borderColor: methodColor }]}>
-                <Text style={[styles.methodText, { color: methodColor }]}>{item.method.toUpperCase()}</Text>
+                <Text style={[styles.methodText, { color: methodColor }]}>
+                  {item.method.toUpperCase()}
+                </Text>
               </View>
               <View style={[styles.statusBadge, { borderColor: statusColor }]}>
-                <Text style={[styles.statusText, { color: statusColor }]}>{item.statusCode || '---'}</Text>
+                <Text style={[styles.statusText, { color: statusColor }]}>
+                  {item.statusCode || '---'}
+                </Text>
               </View>
             </View>
             <Text style={styles.itemTime}>{formattedTime}</Text>
@@ -282,7 +299,9 @@ ${senderName ? `Sender: ${senderName}\n` : ''}Logs Count: ${session.logs.length}
               <View style={styles.metaSpace} />
               <PhoneIcon size={12} color={Theme.colors.textSecondary} />
               <View style={{ width: 4 }} />
-              <Text style={styles.metaText} numberOfLines={1}>{item.screenName || '/'}</Text>
+              <Text style={styles.metaText} numberOfLines={1}>
+                {item.screenName || '/'}
+              </Text>
             </View>
             <Text style={styles.metaText}>{formattedDate}</Text>
           </View>
@@ -291,10 +310,27 @@ ${senderName ? `Sender: ${senderName}\n` : ''}Logs Count: ${session.logs.length}
     );
   };
 
-  const filteredLogs = session.logs.filter((l) =>
-    l.url.toLowerCase().includes(search.toLowerCase()) ||
-    l.method.toLowerCase().includes(search.toLowerCase())
-  );
+  const getIsError = (l: ApiLog) =>
+    l.isError !== undefined
+      ? typeof l.isError === 'string'
+        ? l.isError === 'true'
+        : !!l.isError
+      : l.statusCode
+        ? l.statusCode < 200 || l.statusCode >= 300
+        : false;
+
+  const filteredLogs = session.logs.filter((l) => {
+    const matchesSearch =
+      l.url.toLowerCase().includes(search.toLowerCase()) ||
+      l.method.toLowerCase().includes(search.toLowerCase());
+
+    if (!matchesSearch) return false;
+
+    if (filterType === 'SUCCESS') return !getIsError(l);
+    if (filterType === 'ERROR') return getIsError(l);
+
+    return true;
+  });
 
   const config = ApiLoggerService.getConfig();
 
@@ -306,8 +342,12 @@ ${senderName ? `Sender: ${senderName}\n` : ''}Logs Count: ${session.logs.length}
         </TouchableOpacity>
         {!showSearch ? (
           <View style={styles.headerTitleContainer}>
-            <Text style={styles.title} numberOfLines={1}>API Logs</Text>
-            <Text style={styles.subtitle} numberOfLines={1}>{session.name}</Text>
+            <Text style={styles.title} numberOfLines={1}>
+              API Logs
+            </Text>
+            <Text style={styles.subtitle} numberOfLines={1}>
+              {session.name}
+            </Text>
           </View>
         ) : (
           <TextInput
@@ -319,10 +359,27 @@ ${senderName ? `Sender: ${senderName}\n` : ''}Logs Count: ${session.logs.length}
           />
         )}
         <View style={styles.headerActions}>
-          <TouchableOpacity onPress={() => setShowSearch(!showSearch)} style={styles.iconButton}>
-            <SearchIcon size={20} color={Theme.colors.text} />
+          <TouchableOpacity
+            onPress={() => {
+              if (showSearch && search) {
+                setSearch('');
+                setShowSearch(false);
+              } else {
+                setShowSearch(!showSearch);
+              }
+            }}
+            style={styles.iconButton}
+          >
+            {showSearch && search ? (
+              <CloseIcon size={20} color={Theme.colors.text} />
+            ) : (
+              <SearchIcon size={20} color={Theme.colors.text} />
+            )}
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setEmailModalVisible(true)} style={styles.iconButton}>
+          <TouchableOpacity
+            onPress={() => setEmailModalVisible(true)}
+            style={styles.iconButton}
+          >
             <EmailIcon size={20} color={Theme.colors.text} />
           </TouchableOpacity>
           <TouchableOpacity onPress={exportLogs} style={styles.iconButton}>
@@ -335,14 +392,53 @@ ${senderName ? `Sender: ${senderName}\n` : ''}Logs Count: ${session.logs.length}
       </View>
 
       <View style={styles.filterBar}>
-        <TouchableOpacity style={[styles.filterButton, styles.activeFilter]}>
-          <Text style={[styles.filterText, styles.activeFilterText]}>ALL</Text>
+        <TouchableOpacity
+          style={[
+            styles.filterButton,
+            filterType === 'ALL' && styles.activeFilter,
+          ]}
+          onPress={() => setFilterType('ALL')}
+        >
+          <Text
+            style={[
+              styles.filterText,
+              filterType === 'ALL' && styles.activeFilterText,
+            ]}
+          >
+            ALL
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterText}>SUCCESS</Text>
+        <TouchableOpacity
+          style={[
+            styles.filterButton,
+            filterType === 'SUCCESS' && styles.activeFilter,
+          ]}
+          onPress={() => setFilterType('SUCCESS')}
+        >
+          <Text
+            style={[
+              styles.filterText,
+              filterType === 'SUCCESS' && styles.activeFilterText,
+            ]}
+          >
+            SUCCESS
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterText}>ERROR</Text>
+        <TouchableOpacity
+          style={[
+            styles.filterButton,
+            filterType === 'ERROR' && styles.activeFilter,
+          ]}
+          onPress={() => setFilterType('ERROR')}
+        >
+          <Text
+            style={[
+              styles.filterText,
+              filterType === 'ERROR' && styles.activeFilterText,
+            ]}
+          >
+            ERROR
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -351,6 +447,8 @@ ${senderName ? `Sender: ${senderName}\n` : ''}Logs Count: ${session.logs.length}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
+        style={styles.flatList}
+        extraData={filterType}
       />
 
       <DropdownMenu
@@ -455,6 +553,9 @@ const styles = StyleSheet.create({
   list: {
     paddingHorizontal: Theme.spacing.md,
     paddingBottom: Theme.spacing.xl,
+  },
+  flatList: {
+    flex: 1,
   },
   item: {
     backgroundColor: Theme.colors.surface,

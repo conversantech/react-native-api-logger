@@ -1,46 +1,32 @@
 {
-  "name": "react-native-api-logger",
-  "version": "0.1.0",
+  "name": "@conversantech/react-native-api-tracker",
+  "version": "1.0.0",
   "description": "A React Native API logger",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/typescript/module/src/index.d.ts",
+        "types": "./lib/typescript/src/index.d.ts",
         "default": "./lib/module/index.js"
       },
       "require": {
-        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "types": "./lib/typescript/src/index.d.ts",
         "default": "./lib/commonjs/index.js"
       }
     }
   },
   "files": [
     "src",
-    "lib",
-    "android",
-    "ios",
-    "cpp",
-    "*.podspec",
-    "react-native.config.js",
-    "!ios/build",
-    "!android/build",
-    "!android/gradle",
-    "!android/gradlew",
-    "!android/gradlew.bat",
-    "!android/local.properties",
-    "!**/__tests__",
-    "!**/__fixtures__",
-    "!**/__mocks__",
-    "!**/.*"
+    "lib"
   ],
   "scripts": {
     "test": "jest",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "clean": "del-cli android/build lib",
+    "clean": "del-cli lib",
     "prepare": "bob build",
     "release": "release-it"
   },
@@ -51,14 +37,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ct-dev/react-native-api-logger.git"
+    "url": "git+https://github.com/conversantech/react-native-api-logger.git"
   },
-  "author": "Antigravity <antigravity@example.com> (https://github.com/ct-dev)",
-  "license": "MIT",
+  "author": "conversantech (https://conversantech.com)",
+  "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/ct-dev/react-native-api-logger/issues"
+    "url": "https://github.com/conversantech/react-native-api-logger/issues"
   },
-  "homepage": "https://github.com/ct-dev/react-native-api-logger#readme",
+  "homepage": "https://github.com/conversantech/react-native-api-logger#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -81,7 +67,7 @@
     "prettier": "^3.0.3",
     "react": "19.2.3",
     "react-native": "0.85.2",
-    "react-native-builder-bob": "^0.41.0",
+    "react-native-builder-bob": "^0.25.0",
     "react-native-fs": "^2.20.0",
     "react-native-share": "^12.3.1",
     "react-native-vector-icons": "^10.0.0",
@@ -92,14 +78,17 @@
   "resolutions": {
     "@types/react": "^18.2.44"
   },
+  "overrides": {
+    "yargs": "17.7.2"
+  },
   "peerDependencies": {
-    "@react-native-async-storage/async-storage": "*",
-    "@react-navigation/native": ">= 5.x",
-    "react": "*",
-    "react-native": "*",
-    "react-native-vector-icons": "*",
-    "react-native-fs": "*",
-    "react-native-share": "*"
+    "@react-native-async-storage/async-storage": ">=1.0.0 || >=2.0.0",
+    "@react-navigation/native": ">=5.0.0",
+    "react": ">=18.0.0",
+    "react-native": ">=0.60.0",
+    "react-native-fs": ">=2.0.0",
+    "react-native-share": ">=8.0.0",
+    "react-native-vector-icons": ">=9.0.0"
   },
   "jest": {
     "preset": "react-native",
@@ -164,18 +153,8 @@
     "source": "src",
     "output": "lib",
     "targets": [
-      [
-        "commonjs",
-        {
-          "esm": true
-        }
-      ],
-      [
-        "module",
-        {
-          "esm": true
-        }
-      ],
+      "commonjs",
+      "module",
       [
         "typescript",
         {

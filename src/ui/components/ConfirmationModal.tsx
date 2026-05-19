@@ -39,13 +39,18 @@ export const ConfirmationModal: React.FC<Props> = ({
     >
       <TouchableWithoutFeedback onPress={onCancel}>
         <View style={styles.overlay}>
-          <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
+          <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
             <View style={styles.content}>
               <Text style={styles.title}>{title}</Text>
               <Text style={styles.message}>{message}</Text>
               <View style={styles.actions}>
                 <TouchableOpacity style={styles.button} onPress={onCancel}>
-                  <Text style={[styles.buttonText, { color: Theme.colors.textSecondary }]}>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      { color: Theme.colors.textSecondary },
+                    ]}
+                  >
                     {cancelText}
                   </Text>
                 </TouchableOpacity>
@@ -53,10 +58,14 @@ export const ConfirmationModal: React.FC<Props> = ({
                   style={[styles.button, styles.confirmButton]}
                   onPress={onConfirm}
                 >
-                  <Text 
+                  <Text
                     style={[
-                      styles.buttonText, 
-                      { color: isDestructive ? Theme.colors.error : Theme.colors.primary }
+                      styles.buttonText,
+                      {
+                        color: isDestructive
+                          ? Theme.colors.error
+                          : Theme.colors.primary,
+                      },
                     ]}
                   >
                     {confirmText}

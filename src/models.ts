@@ -32,7 +32,6 @@ export interface SmtpConfig {
   port: number;
   username: string;
   password?: string;
-  fromEmail: string;
   defaultRecipients?: RecipientConfig[];
 }
 

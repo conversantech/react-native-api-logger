@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "react-native-api-logger": ["./src/index"]
+      "@conversantech/react-native-api-tracker": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

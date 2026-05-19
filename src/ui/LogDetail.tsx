@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import type { ApiLog } from '../models';
 import { Theme } from './theme';
-import { BackIcon, SearchIcon, CopyIcon } from './Icons';
+import { BackIcon, SearchIcon, CopyIcon, CloseIcon } from './Icons';
 import { HighlightedText } from './components/HighlightedText';
 
 interface Props {
@@ -25,29 +25,32 @@ const SectionTitle: React.FC<{ title: string }> = ({ title }) => (
   </View>
 );
 
-const OverviewRow: React.FC<{ label: string; value: string; highlight: string; valueColor?: string }> = ({ 
-  label, 
-  value, 
-  highlight,
-  valueColor 
-}) => (
+const OverviewRow: React.FC<{
+  label: string;
+  value: string;
+  highlight: string;
+  valueColor?: string;
+}> = ({ label, value, highlight, valueColor }) => (
   <View style={styles.overviewRow}>
     <Text style={styles.overviewLabel}>{label}</Text>
-    <HighlightedText 
-      text={value} 
-      highlight={highlight} 
-      style={[styles.overviewValue, valueColor ? { color: valueColor } : {}]} 
+    <HighlightedText
+      text={value}
+      highlight={highlight}
+      style={[styles.overviewValue, valueColor ? { color: valueColor } : {}]}
     />
   </View>
 );
 
 export const LogDetail: React.FC<Props> = ({ log, onBack }) => {
-  const [activeTab, setActiveTab] = React.useState<'request' | 'response'>('request');
+  const [activeTab, setActiveTab] = React.useState<'request' | 'response'>(
+    'request'
+  );
   const [search, setSearch] = React.useState('');
   const [showSearch, setShowSearch] = React.useState(false);
 
   const copyToClipboard = (content: any) => {
-    const text = typeof content === 'string' ? content : JSON.stringify(content, null, 2);
+    const text =
+      typeof content === 'string' ? content : JSON.stringify(content, null, 2);
     Clipboard.setString(text);
   };
 
@@ -82,35 +85,50 @@ export const LogDetail: React.FC<Props> = ({ log, onBack }) => {
     return `${day}/${month}/${year}`;
   })();
 
-  const formattedTime = new Date(log.timestamp).toLocaleTimeString([], { hour12: false });
+  const formattedTime = new Date(log.timestamp).toLocaleTimeString([], {
+    hour12: false,
+  });
 
   const renderRequest = () => (
     <ScrollView style={styles.content}>
       <SectionTitle title="Overview" />
       <View style={styles.sectionContent}>
         <OverviewRow label="URL" value={log.url} highlight={search} />
-        <OverviewRow label="Method" value={log.method.toUpperCase()} highlight={search} valueColor={getMethodColor(log.method)} />
+        <OverviewRow
+          label="Method"
+          value={log.method.toUpperCase()}
+          highlight={search}
+          valueColor={getMethodColor(log.method)}
+        />
         <OverviewRow label="Time" value={formattedTime} highlight={search} />
         <OverviewRow label="Date" value={formattedDate} highlight={search} />
-        <OverviewRow label="Duration" value={`${log.duration}ms`} highlight={search} />
-        <OverviewRow label="Screen" value={log.screenName || '/'} highlight={search} />
+        <OverviewRow
+          label="Duration"
+          value={`${log.duration}ms`}
+          highlight={search}
+        />
+        <OverviewRow
+          label="Screen"
+          value={log.screenName || '/'}
+          highlight={search}
+        />
       </View>
 
       <SectionTitle title="Headers" />
       <View style={styles.codeBlock}>
-        <HighlightedText 
-          text={JSON.stringify(log.requestHeaders, null, 2)} 
-          highlight={search} 
-          style={styles.codeText} 
+        <HighlightedText
+          text={JSON.stringify(log.requestHeaders, null, 2)}
+          highlight={search}
+          style={styles.codeText}
         />
       </View>
 
       <SectionTitle title="Body" />
       <View style={styles.codeBlock}>
-        <HighlightedText 
-          text={formatBody(log.requestBody)} 
-          highlight={search} 
-          style={styles.codeText} 
+        <HighlightedText
+          text={formatBody(log.requestBody)}
+          highlight={search}
+          style={styles.codeText}
         />
       </View>
     </ScrollView>
@@ -120,29 +138,29 @@ export const LogDetail: React.FC<Props> = ({ log, onBack }) => {
     <ScrollView style={styles.content}>
       <SectionTitle title="Overview" />
       <View style={styles.sectionContent}>
-        <OverviewRow 
-          label="Status Code" 
-          value={log.statusCode?.toString() || '---'} 
+        <OverviewRow
+          label="Status Code"
+          value={log.statusCode?.toString() || '---'}
           highlight={search}
-          valueColor={log.isError ? Theme.colors.error : Theme.colors.success} 
+          valueColor={log.isError ? Theme.colors.error : Theme.colors.success}
         />
       </View>
 
       <SectionTitle title="Headers" />
       <View style={styles.codeBlock}>
-        <HighlightedText 
-          text={JSON.stringify(log.responseHeaders, null, 2)} 
-          highlight={search} 
-          style={styles.codeText} 
+        <HighlightedText
+          text={JSON.stringify(log.responseHeaders, null, 2)}
+          highlight={search}
+          style={styles.codeText}
         />
       </View>
 
       <SectionTitle title="Body" />
       <View style={styles.codeBlock}>
-        <HighlightedText 
-          text={formatBody(log.responseBody)} 
-          highlight={search} 
-          style={styles.codeText} 
+        <HighlightedText
+          text={formatBody(log.responseBody)}
+          highlight={search}
+          style={styles.codeText}
         />
       </View>
     </ScrollView>
@@ -167,25 +185,42 @@ export const LogDetail: React.FC<Props> = ({ log, onBack }) => {
           />
         )}
         <View style={styles.headerActions}>
-          <TouchableOpacity 
-            style={styles.headerIcon} 
+          <TouchableOpacity
+            style={styles.headerIcon}
             onPress={() => {
-              if (showSearch) {
+              if (showSearch && search) {
                 setSearch('');
+                setShowSearch(false);
+              } else {
+                setShowSearch(!showSearch);
               }
-              setShowSearch(!showSearch);
             }}
           >
-            <SearchIcon size={22} color={showSearch ? Theme.colors.primary : Theme.colors.text} />
+            {showSearch && search ? (
+              <CloseIcon size={22} color={Theme.colors.text} />
+            ) : (
+              <SearchIcon
+                size={22}
+                color={showSearch ? Theme.colors.primary : Theme.colors.text}
+              />
+            )}
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.headerIcon} 
+          <TouchableOpacity
+            style={styles.headerIcon}
             onPress={() => {
-              const requestHeaders = JSON.stringify(log.requestHeaders, null, 2);
+              const requestHeaders = JSON.stringify(
+                log.requestHeaders,
+                null,
+                2
+              );
               const requestBody = formatBody(log.requestBody);
-              const responseHeaders = JSON.stringify(log.responseHeaders, null, 2);
+              const responseHeaders = JSON.stringify(
+                log.responseHeaders,
+                null,
+                2
+              );
               const responseBody = formatBody(log.responseBody);
-              
+
               const text = `URL: ${log.url}
 Method: ${log.method.toUpperCase()}
 Status: ${log.statusCode || '---'}
@@ -212,17 +247,31 @@ ${responseBody}`;
       </View>
 
       <View style={styles.tabs}>
-        <TouchableOpacity 
-          style={[styles.tab, activeTab === 'request' && styles.activeTab]} 
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'request' && styles.activeTab]}
           onPress={() => setActiveTab('request')}
         >
-          <Text style={[styles.tabText, activeTab === 'request' && styles.activeTabText]}>Request</Text>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === 'request' && styles.activeTabText,
+            ]}
+          >
+            Request
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.tab, activeTab === 'response' && styles.activeTab]} 
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'response' && styles.activeTab]}
           onPress={() => setActiveTab('response')}
         >
-          <Text style={[styles.tabText, activeTab === 'response' && styles.activeTabText]}>Response</Text>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === 'response' && styles.activeTabText,
+            ]}
+          >
+            Response
+          </Text>
         </TouchableOpacity>
       </View>
 

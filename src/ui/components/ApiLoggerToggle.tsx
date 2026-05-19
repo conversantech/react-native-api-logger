@@ -1,5 +1,10 @@
 import React from 'react';
-import { View, TouchableWithoutFeedback, Alert, StyleSheet } from 'react-native';
+import {
+  View,
+  TouchableWithoutFeedback,
+  Alert,
+  StyleSheet,
+} from 'react-native';
 import { ApiLogger } from '../../index';
 
 interface Props {
@@ -10,7 +15,7 @@ interface Props {
 }
 
 /**
- * A component that toggles the API Logger's enabled/disabled state 
+ * A component that toggles the API Logger's enabled/disabled state
  * after a certain number of taps.
  */
 export const ApiLoggerToggle: React.FC<Props> = ({
@@ -46,9 +51,7 @@ export const ApiLoggerToggle: React.FC<Props> = ({
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
-      <View style={styles.container}>
-        {children}
-      </View>
+      <View style={styles.container}>{children}</View>
     </TouchableWithoutFeedback>
   );
 };

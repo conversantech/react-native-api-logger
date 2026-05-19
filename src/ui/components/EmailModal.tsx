@@ -28,7 +28,9 @@ export const EmailModal: React.FC<Props> = ({
   defaultRecipients = [],
   initialSenderName = '',
 }) => {
-  const [selectedRecipients, setSelectedRecipients] = React.useState<string[]>([]);
+  const [selectedRecipients, setSelectedRecipients] = React.useState<string[]>(
+    []
+  );
   const [senderName, setSenderName] = React.useState(initialSenderName);
   const [customEmail, setCustomEmail] = React.useState('');
   const [sending, setSending] = React.useState(false);
@@ -64,7 +66,10 @@ export const EmailModal: React.FC<Props> = ({
 
   const handleSend = async () => {
     if (selectedRecipients.length === 0) {
-      Alert.alert('No Recipients', 'Please select or enter at least one recipient.');
+      Alert.alert(
+        'No Recipients',
+        'Please select or enter at least one recipient.'
+      );
       return;
     }
 
@@ -89,7 +94,9 @@ export const EmailModal: React.FC<Props> = ({
       <View style={styles.overlay}>
         <View style={styles.content}>
           <Text style={styles.title}>Send Email Report</Text>
-          <Text style={styles.subtitle}>Configure and send the session report</Text>
+          <Text style={styles.subtitle}>
+            Configure and send the session report
+          </Text>
 
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Your Name</Text>
@@ -104,36 +111,45 @@ export const EmailModal: React.FC<Props> = ({
 
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Recipients</Text>
-            <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+            <ScrollView
+              style={styles.scroll}
+              contentContainerStyle={styles.scrollContent}
+            >
               {defaultRecipients.map((recipient) => (
                 <TouchableOpacity
                   key={recipient.email}
                   style={[
                     styles.chip,
-                    selectedRecipients.includes(recipient.email) && styles.chipSelected,
+                    selectedRecipients.includes(recipient.email) &&
+                      styles.chipSelected,
                   ]}
                   onPress={() => toggleRecipient(recipient.email)}
                 >
                   <Text
                     style={[
                       styles.chipText,
-                      selectedRecipients.includes(recipient.email) && styles.chipTextSelected,
+                      selectedRecipients.includes(recipient.email) &&
+                        styles.chipTextSelected,
                     ]}
                   >
                     {recipient.name} ({recipient.email})
                   </Text>
                 </TouchableOpacity>
               ))}
-              
+
               {selectedRecipients
-                .filter(email => !defaultRecipients.some(r => r.email === email))
+                .filter(
+                  (email) => !defaultRecipients.some((r) => r.email === email)
+                )
                 .map((email) => (
                   <TouchableOpacity
                     key={email}
                     style={[styles.chip, styles.chipSelected]}
                     onPress={() => toggleRecipient(email)}
                   >
-                    <Text style={[styles.chipText, styles.chipTextSelected]}>{email}</Text>
+                    <Text style={[styles.chipText, styles.chipTextSelected]}>
+                      {email}
+                    </Text>
                   </TouchableOpacity>
                 ))}
             </ScrollView>
@@ -164,7 +180,11 @@ export const EmailModal: React.FC<Props> = ({
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.button, styles.sendButton, selectedRecipients.length === 0 && styles.disabledButton]}
+              style={[
+                styles.button,
+                styles.sendButton,
+                selectedRecipients.length === 0 && styles.disabledButton,
+              ]}
               onPress={handleSend}
               disabled={sending || selectedRecipients.length === 0}
             >

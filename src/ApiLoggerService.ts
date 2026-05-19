@@ -35,7 +35,8 @@ class ApiLoggerService {
         this.config.enabled = this.config.initiallyEnabled;
         await this.persistEnabledState(this.config.enabled);
       } else {
-        const persistedEnabled = await AsyncStorage.getItem(STORAGE_KEY_ENABLED);
+        const persistedEnabled =
+          await AsyncStorage.getItem(STORAGE_KEY_ENABLED);
         if (persistedEnabled !== null) {
           this.config.enabled = persistedEnabled === 'true';
         }
@@ -53,7 +54,7 @@ class ApiLoggerService {
   }
 
   private notifySubscribers() {
-    this.subscribers.forEach(sub => sub());
+    this.subscribers.forEach((sub) => sub());
   }
 
   subscribe(callback: () => void) {
@@ -106,7 +107,10 @@ class ApiLoggerService {
 
   private async saveSessions() {
     try {
-      await AsyncStorage.setItem(STORAGE_KEY_SESSIONS, JSON.stringify(this.sessions));
+      await AsyncStorage.setItem(
+        STORAGE_KEY_SESSIONS,
+        JSON.stringify(this.sessions)
+      );
       this.notifySubscribers();
     } catch (e) {
       console.error('Failed to save sessions', e);
@@ -145,7 +149,7 @@ class ApiLoggerService {
       this.startNewSession();
     }
 
-    const session = this.sessions.find(s => s.id === this.currentSessionId);
+    const session = this.sessions.find((s) => s.id === this.currentSessionId);
     if (!session || !this.currentSessionId) return null;
 
     const fullLog: ApiLog = {
@@ -163,8 +167,11 @@ class ApiLoggerService {
     };
 
     session.logs.unshift(fullLog);
-    
-    if (this.config.maxLogsPerSession && session.logs.length > this.config.maxLogsPerSession) {
+
+    if (
+      this.config.maxLogsPerSession &&
+      session.logs.length > this.config.maxLogsPerSession
+    ) {
       session.logs = session.logs.slice(0, this.config.maxLogsPerSession);
     }
 
@@ -175,10 +182,10 @@ class ApiLoggerService {
   async logResponse(logId: string, response: Partial<ApiLog>) {
     if (!this.config.enabled) return;
 
-    const session = this.sessions.find(s => s.id === this.currentSessionId);
+    const session = this.sessions.find((s) => s.id === this.currentSessionId);
     if (!session) return;
 
-    const logIndex = session.logs.findIndex(l => l.id === logId);
+    const logIndex = session.logs.findIndex((l) => l.id === logId);
     if (logIndex === -1) return;
 
     const logEntry = session.logs[logIndex];
@@ -202,7 +209,7 @@ class ApiLoggerService {
   }
 
   renameSession(id: string, newName: string) {
-    const session = this.sessions.find(s => s.id === id);
+    const session = this.sessions.find((s) => s.id === id);
     if (session) {
       session.name = newName;
       this.saveSessions();
@@ -210,7 +217,7 @@ class ApiLoggerService {
   }
 
   deleteSession(id: string) {
-    this.sessions = this.sessions.filter(s => s.id !== id);
+    this.sessions = this.sessions.filter((s) => s.id !== id);
     if (this.currentSessionId === id) {
       this.currentSessionId = null;
     }
